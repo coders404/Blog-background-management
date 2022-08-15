@@ -37,7 +37,19 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    before: require('./mock/mock-server.js'),
+    //! 配置开发环境代理
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {  //! 是.env.development 文件的 '/dev-api'
+        //! 目标服务器地址
+        target: 'https://mock.mengxuegu.com/mock/62f74f7cf2652f239bd0a811/blog-admin',
+        changeOrigin: true, //! 开启跨域 true为开启
+        pathRewrite: {
+          //! '^/dev-api': '',
+          ['^' + process.env.VUE_APP_BASE_API]: ''  //! '^/dev-api': '' 会进行替换 让其为空 然后只显示我们真实url的路径就可以了
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

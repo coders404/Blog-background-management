@@ -2,9 +2,11 @@
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <sidebar class="sidebar-container" />
-    <div class="main-container">
+    <div class="hasTagsView main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
+        <navbar></navbar>
+        <!--引用标签页导航组件 -->
+        <tags-view />
       </div>
       <app-main />
     </div>
@@ -12,7 +14,7 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain } from './components'
+import { Navbar, Sidebar, AppMain, TagsView} from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -20,7 +22,8 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
+    TagsView  //! 02)引入TagsView组件
   },
   mixins: [ResizeMixin],
   computed: {
