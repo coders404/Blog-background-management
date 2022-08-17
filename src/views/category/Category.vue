@@ -7,7 +7,7 @@
       size="mini"
     >
       <el-form-item label="分类名称">
-        <el-input v-model="query.name" placeholder="分类"></el-input>
+        <el-input v-model="query.name"></el-input>
       </el-form-item>
       <el-form-item label="状态">
         <el-select
@@ -16,12 +16,11 @@
           filterable
           style="wdith: 85px"
         >
-          <!--clearable 清空按钮 filterable 是否可搜索 -->
+          <!--! clearable 清空按钮 filterable 是否可搜索 -->
           <el-option
             v-for="item in statusOptions"
             :key="item.code"
-            :label="item.name"
-            :value="item.code"
+            :value="item.name"
           >
           </el-option>
         </el-select>
@@ -30,14 +29,18 @@
         <el-button
           icon="el-icon-search"
           type="primary"
-          @click="queryData"
           size="mini"
+          @click="queryData"
           >查询</el-button
         >
         <el-button icon="el-icon-refresh" size="mini" @click="reload"
           >重置</el-button
         >
-        <el-button icon="el-icon-circle-plus-outline" type="primary" size="mini"
+        <el-button
+          icon="el-icon-circle-plus-outline"
+          type="primary"
+          size="mini"
+          @click="openAdd"
           >新增</el-button
         >
       </el-form-item>
@@ -97,17 +100,28 @@
       :total="page.total"
     >
     </el-pagination>
+    <edit
+      :title="edit.title"
+      :visible="edit.visible"
+      :formData="edit.formData"
+      :remoteClose="remoteClose"
+    />
   </div>
 </template>
 
 <script>
 import api from "@/api/category";
+import Edit from "./Edit";
+//* 定义一个常量 代表查询状态
 const statusOptions = [
   { code: 0, name: "禁止" },
   { code: 1, name: "正常" },
 ];
 export default {
   name: "Article",
+  components: {
+    Edit,
+  },
   data() {
     return {
       list: [],
@@ -117,9 +131,13 @@ export default {
         current: 1, //! 当前页码
         size: 20, //! 总条数
       },
-      //! 查询条件
-      query: {},
+      query: {}, //! 查询条件
       statusOptions,
+      edit: {
+        title: "",
+        visible: false,
+        formData: {},
+      },
     };
   },
   created() {
@@ -133,7 +151,6 @@ export default {
       return show[status];
     },
   },
-
   methods: {
     tolist() {
       api.goList(this.query, this.page.current, this.page.size).then((res) => {
@@ -143,11 +160,31 @@ export default {
         this.page.total = res.data.total;
       });
     },
+    handleEdit(id) {
+      //! 添加编辑图书
+      api.getPost(id).then((res) => {
+        //! 将查询的数据进行传递
+        this.edit.formData = res.data;
+        this.edit.title = "编辑";
+        this.edit.visible = true;
+      });
+    },
 
-    handleEdit(id) {},
-
-    handleDelete(id) {},
-
+    handleDelete(id) {
+      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+          api.delete(id).then((res) => {
+            this.$message({
+              type: res.code === 20000 ? "success" : "error",
+              message: res.message,
+            })
+            this.tolist()
+          })
+        }).catch(() => {});
+    },
     //*每页显示条数改变后被触发(比如20---->50) ---> 页面改变后触发的方法 ---> val是最新的每页显示条数
     handleSizeChange(val) {
       this.page.list = val;
@@ -158,9 +195,28 @@ export default {
       this.current = val;
       this.tolist();
     },
-    queryData() {},
-    reload() {},
-  },
+    queryData() {
+      //* 查询
+      this.current = 1;
+      this.tolist();
+    },
+    reload() {
+      //* 重置
+      this.query = {};
+      this.tolist();
+    },
+    remoteClose() {
+      //* 子组件触发此事件关闭窗口 传递到了edit里面
+      this.formData = {};
+      this.edit.visible = false;
+      this.tolist();
+    },
+    openAdd() {
+      //* 给新增添加事件
+      this.edit.visible = true;
+      this.edit.title = "新增";
+    },
+  }
 };
 </script>
 
