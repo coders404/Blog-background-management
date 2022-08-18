@@ -118,8 +118,8 @@ export default {
           type: "error",
         });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

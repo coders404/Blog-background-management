@@ -45,7 +45,7 @@
         >
       </el-form-item>
     </el-form>
-    <el-table :data="list" border style="width: 100%">
+       <el-table :data="list" border style="width: 100%">
       <el-table-column
         type="index"
         prop="date"
@@ -68,7 +68,7 @@
         label="备注"
         align="center"
       ></el-table-column>
-      <el-table-column prop="status" label="状态" align="center">
+      <el-table-column prop="status" labeopenAddopenAddl="状态" align="center">
         <template slot-scope="scope">
           <!--传入status的状态 执行filters -->
           <el-tag :type="scope.row.status | statusFilter">
@@ -95,7 +95,7 @@
       @current-change="handleCurrentChange"
       :current-page="page.current"
       :page-sizes="[10, 20, 50]"
-      :page-size="50"
+      :page-size="page.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="page.total"
     >
@@ -149,7 +149,7 @@ export default {
     statusFilter(status) {
       const show = { 0: "info", 1: "danger" };
       return show[status];
-    },
+    }
   },
   methods: {
     tolist() {
@@ -183,7 +183,7 @@ export default {
             })
             this.tolist()
           })
-        }).catch(() => {});
+        }).catch(() => {})
     },
     //*每页显示条数改变后被触发(比如20---->50) ---> 页面改变后触发的方法 ---> val是最新的每页显示条数
     handleSizeChange(val) {
@@ -215,7 +215,7 @@ export default {
       //* 给新增添加事件
       this.edit.visible = true;
       this.edit.title = "新增";
-    },
+    }
   }
 };
 </script>

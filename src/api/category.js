@@ -37,5 +37,11 @@ export default {
       url: `/article/category/${id}`,
       method: 'delete'
     })
+  },
+  categoryList() { //! 查询所有正常状态的分类
+    return request({
+      url: '/article/category/list',
+      method: 'get'
+    })
   }
 }

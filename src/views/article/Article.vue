@@ -1,27 +1,36 @@
 <template>
   <div>
-    <h1>文章管理</h1>
+    
   </div>
 </template>
 
 <script>
+import api from '@/api/article'
 export default {
-  name: 'Article',
+  name: 'fetchData',
 
   data() {
     return {
-      
+      list: [],
+      edit: {
+        total: 0,
+        current: 1,
+        size: 20
+      },
+      query: {}
     }
   },
-
-  mounted() {
-    
+  created() {
+    this.fetchData()
   },
-
   methods: {
-    
-  },
-};
+    async fetchData() {
+      const { data } = await api.goSearch(this.query, this.current, this.size)
+      this.list = data.card
+      this.edit.total = data.total
+    } 
+  }
+}
 </script>
 
 <style lang="scss" scoped>
