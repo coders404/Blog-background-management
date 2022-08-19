@@ -1,28 +1,13 @@
 <template>
   <div class="app-container">
-    <el-form
-      :inline="true"
-      v-model="query"
-      class="demo-form-inline"
-      size="mini"
-    >
+    <el-form :inline="true"   v-model="query"  class="demo-form-inline" size="mini" >
       <el-form-item label="分类名称">
         <el-input v-model="query.name"></el-input>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select
-          v-model="query.status"
-          clearable
-          filterable
-          style="wdith: 85px"
-        >
+        <el-select v-model="query.status" clearable filterable style="wdith: 85px" >
           <!--! clearable 清空按钮 filterable 是否可搜索 -->
-          <el-option
-            v-for="item in categoryList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.value"
-          >
+          <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.value" >
           </el-option>
         </el-select>
       </el-form-item>
@@ -32,18 +17,13 @@
           type="primary"
           size="mini"
           @click="queryData"
-          >查询</el-button
-        >
-        <el-button icon="el-icon-refresh" size="mini" @click="reload"
-          >重置</el-button
-        >
+          >查询</el-button >
+        <el-button icon="el-icon-refresh" size="mini" @click="reload" >重置</el-button>
         <el-button
           icon="el-icon-circle-plus-outline"
           type="primary"
           size="mini"
-          @click="openAdd"
-          >新增</el-button
-        >
+          @click="openAdd" >新增</el-button>
       </el-form-item>
     </el-form>
 
@@ -134,7 +114,6 @@ export default {
       //! 抓取数据
       api.goList(this.query,this.page.current = 1, this.page.size = 20)
         .then(res => {
-          console.log(res);
           this.list = res.data.records;
           this.page.total = res.data.total;
         });
@@ -183,7 +162,7 @@ export default {
       this.fetchData();
     },
     reload() {
-      this.query = {};
+      this.query = {}
       this.fetchData();
     },
     openAdd() {
